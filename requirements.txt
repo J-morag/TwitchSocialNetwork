@@ -1,0 +1,10 @@
+requests
+python-dotenv
+pandas
+matplotlib
+seaborn
+notebook
+jupyterlab
+networkx
+python-louvain
+ipywidgets
