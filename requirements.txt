@@ -8,3 +8,7 @@ jupyterlab
 networkx
 python-louvain
 ipywidgets
+bertopic
+sentence-transformers
+scikit-learn
+nltk

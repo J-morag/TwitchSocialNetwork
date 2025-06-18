@@ -23,7 +23,7 @@ NUM_STREAMS_PER_CATEGORY = 50 # Number of top streams to fetch per category
 REFETCH_CHANNEL_DETAILS_DAYS = 7 # How often to re-fetch full channel details
 REFETCH_CHANNEL_VIDEOS_DAYS = 2  # How often to check for new videos for a channel
 
-MENTION_PROC_BATCH_SIZE = 100  # Videos per batch for mention processing
+MENTION_PROC_BATCH_SIZE = 250  # Videos per batch for mention processing
 MENTION_PROC_MAX_BATCHES = 100 # Max mention processing batches per notebook run
 
 REFRESH_CYCLE_CHANNELS = 750   # Number of random channels to refresh details/videos for per run
@@ -40,8 +40,8 @@ NETWORK_MIN_COLLABORATION_COUNT = 2       # Edges with fewer collabs than this a
 NETWORK_MIN_FOLLOWER_COUNT = 1000     # Channels with fewer total followers are ignored in analysis.
 NETWORK_MIN_CHANNEL_VIDEO_COUNT = 5       # Channels with fewer videos are ignored in analysis.
 # For subgraph visualization specifically
-NETWORK_VIZ_TOP_N_CHANNELS_BY_DEGREE = 20 # How many top channels (by degree) to initially pick for subgraph
-NETWORK_VIZ_MAX_SUBGRAPH_NODES = 40       # Max total nodes in the displayed subgraph
+NETWORK_VIZ_TOP_N_CHANNELS_BY_DEGREE = 50 # How many top channels (by degree) to initially pick for subgraph
+NETWORK_VIZ_MAX_SUBGRAPH_NODES = 500       # Max total nodes in the displayed subgraph
 NETWORK_DURATION_OUTLIER_WEEKS = 1 # Set threshold to 1 week
 
 # --- Validation ---
