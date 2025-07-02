@@ -18,7 +18,7 @@ DATABASE_NAME = "twitch_data.db"
 
 # --- Data Collection Parameters ---
 # These control how much new data is fetched in each cycle
-NUM_TOP_CATEGORIES = 30  # Number of top categories (games) to fetch
+NUM_TOP_CATEGORIES = 50  # Number of top categories to fetch
 NUM_STREAMS_PER_CATEGORY = 50 # Number of top streams to fetch per category
 REFETCH_CHANNEL_DETAILS_DAYS = 7 # How often to re-fetch full channel details
 REFETCH_CHANNEL_VIDEOS_DAYS = 2  # How often to check for new videos for a channel
@@ -26,7 +26,7 @@ REFETCH_CHANNEL_VIDEOS_DAYS = 2  # How often to check for new videos for a chann
 MENTION_PROC_BATCH_SIZE = 250  # Videos per batch for mention processing
 MENTION_PROC_MAX_BATCHES = 100 # Max mention processing batches per notebook run
 
-REFRESH_CYCLE_CHANNELS = 750   # Number of random channels to refresh details/videos for per run
+REFRESH_CYCLE_CHANNELS = 500   # Number of random channels to refresh details/videos for per run
 
 # Optional: Fetch videos only published after a certain date (None to fetch all initially)
 # FETCH_VIDEOS_AFTER = datetime(2024, 1, 1, tzinfo=timezone.utc) # Example date
