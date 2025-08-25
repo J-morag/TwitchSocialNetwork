@@ -62,6 +62,8 @@ def initialize_database(conn):
                        INTEGER,
                        follower_count
                        INTEGER,
+                       tags
+                       TEXT, 
                        created_at
                        TIMESTAMP,
                        first_seen
@@ -74,6 +76,16 @@ def initialize_database(conn):
                        TIMESTAMP
                    );
                    """)
+
+    # Safely add the new tags column to existing databases
+    try:
+        cursor.execute("ALTER TABLE Channels ADD COLUMN tags TEXT;")
+        logging.info("Added 'tags' column to Channels table.")
+    except sqlite3.OperationalError as e:
+        if "duplicate column name" in str(e):
+            pass  # Column already exists, which is fine
+        else:
+            raise
 
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS Videos
@@ -282,7 +294,24 @@ def save_channel_basic(conn, channel_data):
         return False
 
 
+def update_channel_detail_fetch_time(conn, channel_id):
+    """Updates the last_fetched_details timestamp for a channel."""
+    cursor = conn.cursor()
+    sql = "UPDATE Channels SET last_fetched_details = ? WHERE id = ?"
+    now = datetime.now(timezone.utc)
+    try:
+        cursor.execute(sql, (now, channel_id))
+        conn.commit()
+    except sqlite3.Error as e:
+        logging.error(f"DB error updating detail fetch time for channel {channel_id}: {e}")
+        conn.rollback()
+
+
 def save_channel_details(conn, channel_details):
+    """
+    Saves or updates detailed channel information using a legacy-compatible
+    two-step INSERT OR IGNORE + UPDATE method to ensure maximum compatibility.
+    """
     cursor = conn.cursor()
     now = datetime.now(timezone.utc)
     created_at_dt = None
@@ -293,31 +322,59 @@ def save_channel_details(conn, channel_details):
         except ValueError:
             logging.warning(f"Could not parse channel created_at timestamp: {created_at_str}")
 
-    sql = """
-          INSERT INTO Channels (id, login, display_name, description, profile_image_url, \
-                                broadcaster_type, view_count, follower_count, \
-                                created_at, last_fetched_details) \
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO \
-          UPDATE SET
-              login = excluded.login, \
-              display_name = excluded.display_name, \
-              description = excluded.description, \
-              profile_image_url = excluded.profile_image_url, \
-              broadcaster_type = excluded.broadcaster_type, \
-              view_count = excluded.view_count, \
-              follower_count = excluded.follower_count, \
-              created_at = COALESCE (excluded.created_at, created_at), \
-              last_fetched_details = excluded.last_fetched_details; \
-          """
-    data = (
+    tags_json = json.dumps(channel_details.get('tags')) if channel_details.get('tags') is not None else None
+
+    # Step 1: Insert the record if it doesn't exist. If it does, do nothing.
+    insert_sql = """
+    INSERT OR IGNORE INTO Channels (
+        id, login, display_name, description, profile_image_url,
+        broadcaster_type, view_count, follower_count, tags,
+        created_at, last_fetched_details
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """
+    insert_data = (
         channel_details['id'], channel_details['login'],
         channel_details.get('display_name'), channel_details.get('description'),
         channel_details.get('profile_image_url'), channel_details.get('broadcaster_type'),
         channel_details.get('view_count', 0), channel_details.get('follower_count'),
-        created_at_dt, now
+        tags_json, created_at_dt, now
     )
+
+    # Step 2: Update the record. This will affect the row whether it was
+    # just inserted or if it already existed.
+    update_sql = """
+    UPDATE Channels SET
+        login = ?, 
+        display_name = ?, 
+        description = ?, 
+        profile_image_url = ?,
+        broadcaster_type = ?, 
+        view_count = ?, 
+        follower_count = ?, 
+        tags = ?,
+        -- Only update created_at if it's currently NULL to preserve original creation date
+        created_at = COALESCE(created_at, ?),
+        last_fetched_details = ?
+    WHERE id = ?;
+    """
+    update_data = (
+        channel_details['login'],
+        channel_details.get('display_name'),
+        channel_details.get('description'),
+        channel_details.get('profile_image_url'),
+        channel_details.get('broadcaster_type'),
+        channel_details.get('view_count', 0),
+        channel_details.get('follower_count'),
+        tags_json,
+        created_at_dt,
+        now,
+        channel_details['id'] # For the WHERE clause
+    )
+
     try:
-        cursor.execute(sql, data)
+        # Execute both statements in a single transaction
+        cursor.execute(insert_sql, insert_data)
+        cursor.execute(update_sql, update_data)
         conn.commit()
     except sqlite3.Error as e:
         logging.error(f"DB error saving channel details for {channel_details['login']}: {e}")

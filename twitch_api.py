@@ -296,3 +296,48 @@ class TwitchAPIClient:
             # This can happen for new channels or if the API call fails
             logging.warning(f"Could not retrieve follower count for broadcaster_id: {broadcaster_id}")
             return None # Return None to indicate failure or no data
+
+    def get_channel_tags(self, broadcaster_id):
+        """
+        Fetches channel details, including tags, for a single broadcaster.
+        """
+        if not broadcaster_id:
+            logging.warning("get_channel_tags called without broadcaster_id.")
+            return None
+
+        params = {'broadcaster_id': broadcaster_id}
+        response_data = self._make_request('GET', '/channels', params=params)
+
+        # The response is a list inside the 'data' key, we want the first element
+        if response_data and response_data.get('data'):
+            channel_data = response_data['data'][0]
+            # Return the tags list specifically
+            return channel_data.get('tags', []) # Return empty list if tags field is missing
+        else:
+            logging.warning(f"Could not retrieve channel tags for broadcaster_id: {broadcaster_id}")
+            return None
+
+        # In twitch_api.py, add this method to the TwitchAPIClient class
+
+    def get_channels_info(self, broadcaster_ids):
+        """
+        Fetches channel details, including tags, for a list of up to 100 broadcasters.
+        """
+        if not broadcaster_ids:
+            logging.warning("get_channels_info called with no broadcaster_ids.")
+            return None
+        if len(broadcaster_ids) > 100:
+            logging.error("get_channels_info called with more than 100 broadcaster_ids.")
+            return None
+
+        # The API accepts multiple broadcaster_id parameters
+        params = [('broadcaster_id', bid) for bid in broadcaster_ids]
+
+        response_data = self._make_request('GET', '/channels', params=params)
+
+        if response_data and 'data' in response_data:
+            return response_data['data']  # Return the list of channel data objects
+        else:
+            logging.warning(
+                f"Could not retrieve channel info for broadcaster_ids starting with: {broadcaster_ids[0]}")
+            return None
