@@ -12,3 +12,4 @@ bertopic
 sentence-transformers
 scikit-learn
 nltk
+Pillow
