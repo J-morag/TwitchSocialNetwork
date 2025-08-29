@@ -44,10 +44,6 @@ NETWORK_VIZ_TOP_N_CHANNELS_BY_DEGREE = 50 # How many top channels (by degree) to
 NETWORK_VIZ_MAX_SUBGRAPH_NODES = 1000       # Max total nodes in the displayed subgraph
 NETWORK_DURATION_OUTLIER_WEEKS = 1 # Set threshold to 1 week
 
-# --- Validation ---
-if not TWITCH_CLIENT_ID or not TWITCH_CLIENT_SECRET or TWITCH_CLIENT_ID == "your_actual_client_id_from_twitch_developer_console":
-    raise ValueError("CRITICAL: TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET must be set "
-                     "in environment variables or a .env file with your actual credentials.")
 
 # Function to print configuration values (can be called in the notebook)
 def print_config():

@@ -9,6 +9,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 class TwitchAPIClient:
     def __init__(self, client_id, client_secret, auth_url, base_url):
+        """
+        Initializes the API client.
+        """
+        # validation check
+        if not client_id or not client_secret or client_id == "your_actual_client_id_from_twitch_developer_console":
+            raise ValueError(
+                "CRITICAL: TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET are not set or are using placeholder values. "
+                "Please update your .env file with actual credentials."
+            )
+
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth_url = auth_url
