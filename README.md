@@ -46,7 +46,8 @@ The system identifies collaborations by parsing `@mentions` in video titles, val
 You can run the entire notebook in Google Colab without any local setup. Just follow these steps:
 1. **Open the Notebook in Colab:** Click [this link](https://colab.research.google.com/github/J-morag/TwitchSocialNetwork/blob/master/twitch_data_collector.ipynb) to open the notebook directly in Google Colab.
 2. **Set Up Twitch API Credentials:** Create a `.env` file in the Colab environment with your Twitch API credentials. The formats are the same as described in the local setup section below.
-3. **Run the Cells Sequentially:** Execute the cells in order. The notebook is identical to the local version, except for the addition of the first code cell, which performs all necessary installations and setup.
+3. **Setup & Install Dependencies:** The first two code cells in the notebook handle all necessary installations and setup. After running the second cell, you must restart the Colab runtime.
+3. **Run the Cells Sequentially:** Execute the cells in order.
 
 ## 🏁 Getting Started (local setup)
 
