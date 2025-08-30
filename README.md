@@ -49,6 +49,7 @@ You can run the entire notebook in Google Colab without any local setup. Just fo
 3. **Setup & Install Dependencies:** The first two code cells in the notebook handle all necessary installations and setup. After running the second cell, you must restart the Colab runtime.
 4. **Run the Cells Sequentially:** Execute the cells in order.
 5. Note that some interactive widgets may have limited functionality in Colab compared to a local Jupyter environment.
+6. It is recommended to run using a GPU backend, since training the BERTopic model will be significantly faster.
 
 ## 🏁 Getting Started (local setup)
 
