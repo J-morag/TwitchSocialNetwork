@@ -13,8 +13,9 @@ TWITCH_CLIENT_SECRET = os.getenv("TWITCH_CLIENT_SECRET")
 TWITCH_AUTH_URL = "https://id.twitch.tv/oauth2/token"
 TWITCH_API_BASE_URL = "https://api.twitch.tv/helix"
 
-# --- Database Configuration ---
+# --- Database and File Configuration ---
 DATABASE_NAME = "twitch_data.db"
+OUTPUT_DIR = "output"
 
 # --- Data Collection Parameters ---
 # These control how much new data is fetched in each cycle
