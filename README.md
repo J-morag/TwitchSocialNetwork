@@ -122,4 +122,4 @@ For the interactive visualization widgets to work, enable the extension:
     * **Dashboard Development:** Create an interactive web-based dashboard (e.g., using Dash or Streamlit) for easier exploration.
 
 ## ⚠️ Aknowledgement of the Use of Large Language Models
-* **Google Gemini 2.5 Pro** Most of the code in this project was designed and written by Google Gemini 2.5 Pro.
+* **LLM Code:** Most of the code in this project was designed and written by Google Gemini 2.5 Pro.
